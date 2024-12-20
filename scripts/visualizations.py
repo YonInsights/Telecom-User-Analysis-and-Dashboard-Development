@@ -1,6 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 import math
+import seaborn as sns
 
 def plot_histograms(df, numeric_cols, cols_per_row=5, rows_per_fig=10):
     """
@@ -82,5 +83,51 @@ def plot_total_data_volume(user_data, top_n=10):
     plt.tight_layout()
     plt.show()
 
+def filter_top_users(df, metric, top_n=10):
+    """
+    Filters the top N users based on a given metric.
+    :param df: DataFrame containing user data.
+    :param metric: Column name to sort and filter by.
+    :param top_n: Number of top users to keep.
+    :return: Filtered DataFrame.
+    """
+    return df.nlargest(top_n, metric)
 
+def plot_xdr_sessions_top(df):
+    """Visualize the number of xDR sessions for the top users."""
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x='MSISDN/Number', y='Number of xDR Sessions', data=df)
+    plt.xticks(rotation=45)
+    plt.title('Number of xDR Sessions (Top Users)')
+    plt.xlabel('MSISDN/Number')
+    plt.ylabel('Number of xDR Sessions')
+    plt.show()
 
+def plot_total_dl_data_top(df):
+    """Visualize the total download data (DL) for the top users."""
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x='MSISDN/Number', y='Total DL Data (Bytes)', data=df)
+    plt.xticks(rotation=45)
+    plt.title('Total Download Data (Top Users)')
+    plt.xlabel('MSISDN/Number')
+    plt.ylabel('Total DL Data (Bytes)')
+    plt.show()
+
+def plot_total_ul_data_top(df):
+    """Visualize the total upload data (UL) for the top users."""
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x='MSISDN/Number', y='Total UL Data (Bytes)', data=df)
+    plt.xticks(rotation=45)
+    plt.title('Total Upload Data (Top Users)')
+    plt.xlabel('MSISDN/Number')
+    plt.ylabel('Total UL Data (Bytes)')
+    plt.show()
+
+def plot_data_volume_vs_duration_top(df):
+    """Visualize the relationship between total data volume and session duration for top users."""
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(x='Total Data Volume (Bytes)', y='Total Session Duration (ms)', data=df)
+    plt.title('Total Data Volume vs Session Duration (Top Users)')
+    plt.xlabel('Total Data Volume (Bytes)')
+    plt.ylabel('Total Session Duration (ms)')
+    plt.show()
