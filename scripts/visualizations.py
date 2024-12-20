@@ -32,7 +32,25 @@ def plot_histograms(df, numeric_cols, cols_per_row=5, rows_per_fig=10):
 
         plt.show()
 
-# Example usage:
-# df = pd.read_csv("path_to_your_csv_file.csv")
-# numeric_cols = df.select_dtypes(include='number').columns
-# plot_histograms(df, numeric_cols)
+def plot_boxplots(df, numeric_cols):
+    """
+    Plots box plots for each numeric column in the DataFrame.
+
+    Parameters:
+    df (DataFrame): The input DataFrame.
+    numeric_cols (list): List of numeric columns in the DataFrame.
+    """
+    num_cols = len(numeric_cols)
+    num_rows = math.ceil(num_cols / 5)
+
+    plt.figure(figsize=(20, num_rows * 4))
+    for i, col in enumerate(numeric_cols, 1):
+        plt.subplot(num_rows, 5, i)
+        df.boxplot(column=col)
+        plt.title(col)
+        plt.tight_layout()
+
+    plt.show()
+
+
+
