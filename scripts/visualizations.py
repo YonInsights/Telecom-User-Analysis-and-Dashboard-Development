@@ -52,5 +52,35 @@ def plot_boxplots(df, numeric_cols):
 
     plt.show()
 
+def plot_total_data_volume(user_data, top_n=10):
+    """
+    Plots a bar chart of total data volume for each user (MSISDN/Number).
+    
+    Parameters:
+    - user_data (DataFrame): The aggregated data per user.
+    - top_n (int): The number of top users to plot. Default is 10.
+    """
+    # Sort the data based on total_data_volume in descending order and select top_n rows
+    top_users = user_data.sort_values('total_data_volume', ascending=False).head(top_n)
+
+    # Create the plot
+    plt.figure(figsize=(12, 6))
+    plt.bar(top_users['MSISDN/Number'].astype(str), top_users['total_data_volume'], color='skyblue')
+
+    # Add labels and title
+    plt.xlabel('MSISDN/Number')
+    plt.ylabel('Total Data Volume (Bytes)')
+    plt.title(f'Top {top_n} Users with Highest Total Data Volume')
+    plt.xticks(rotation=90)  # Rotate the MSISDN/Number labels for better readability
+
+    # Add the data values on top of each bar
+    for i, bar in enumerate(plt.gca().patches):
+        plt.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 10, 
+                 f'{bar.get_height():,.0f}', ha='center', va='bottom', fontsize=9)
+
+    # Show the plot
+    plt.tight_layout()
+    plt.show()
+
 
 
