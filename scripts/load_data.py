@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
-
 def fetch_data(query: str) -> pd.DataFrame:
     """
     Connect to the database and execute a query.
