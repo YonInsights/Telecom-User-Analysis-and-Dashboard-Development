@@ -131,3 +131,58 @@ def plot_data_volume_vs_duration_top(df):
     plt.xlabel('Total Data Volume (Bytes)')
     plt.ylabel('Total Session Duration (ms)')
     plt.show()
+def generate_graphical_univariate_analysis(data):
+    # List of quantitative variables in the dataset
+    quantitative_vars = data.columns
+
+    # Set up the plotting grid
+    fig, axes = plt.subplots(len(quantitative_vars), 3, figsize=(18, 5 * len(quantitative_vars)))
+    fig.suptitle('Graphical Univariate Analysis', fontsize=16, y=0.92)
+
+    # Loop through each variable and create the plots
+    for i, var in enumerate(quantitative_vars):
+        plot_histogram(data, var, axes[i, 0])
+        plot_boxplot(data, var, axes[i, 1])
+        plot_density(data, var, axes[i, 2])
+
+    # Adjust layout
+    plt.tight_layout()
+    plt.show()
+
+    # Function to plot histogram
+def plot_histogram(data, var, ax):
+    sns.histplot(data[var], bins=30, kde=False, ax=ax, color='skyblue')
+    ax.set_title(f'{var} - Histogram')
+    ax.set_xlabel(var)
+    ax.set_ylabel('Frequency')
+
+# Function to plot boxplot
+def plot_boxplot(data, var, ax):
+    sns.boxplot(x=data[var], ax=ax, color='orange')
+    ax.set_title(f'{var} - Boxplot')
+    ax.set_xlabel(var)
+
+# Function to plot density plot
+def plot_density(data, var, ax):
+    sns.kdeplot(data[var], ax=ax, fill=True, color='green')
+    ax.set_title(f'{var} - Density Plot')
+    ax.set_xlabel(var)
+
+# Main function to generate all plots
+def generate_graphical_univariate_analysis(data):
+    # List of quantitative variables in the dataset
+    quantitative_vars = data.columns
+
+    # Set up the plotting grid
+    fig, axes = plt.subplots(len(quantitative_vars), 3, figsize=(18, 5 * len(quantitative_vars)))
+    fig.suptitle('Graphical Univariate Analysis', fontsize=16, y=0.92)
+
+    # Loop through each variable and create the plots
+    for i, var in enumerate(quantitative_vars):
+        plot_histogram(data, var, axes[i, 0])
+        plot_boxplot(data, var, axes[i, 1])
+        plot_density(data, var, axes[i, 2])
+
+    # Adjust layout
+    plt.tight_layout()
+    plt.show()
