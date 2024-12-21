@@ -2,6 +2,13 @@ import os
 import matplotlib.pyplot as plt
 import math
 import seaborn as sns
+import pandas as pd
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
+# Load your data (assuming you have a DataFrame named 'data_for_bivariate')
+# data_for_bivariate = pd.read_csv("your_dataset.csv")
+
 
 def plot_histograms(df, numeric_cols, cols_per_row=5, rows_per_fig=10):
     """
@@ -186,3 +193,38 @@ def generate_graphical_univariate_analysis(data):
     # Adjust layout
     plt.tight_layout()
     plt.show()
+
+    # Function to create scatter plots
+# Define the plot function (for reference)
+def plot_scatter(x, y, ax, title, xlabel, ylabel):
+    ax.scatter(x, y, color='blue')
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+
+# Create a figure and axes for the subplots (2 rows, 3 columns)
+fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+
+def plot_cumulative_variance(cumulative_variance, figsize=(8, 5), marker='o', linestyle='--'):
+    """
+    Plots the cumulative explained variance from PCA.
+
+    Parameters:
+        cumulative_variance (list or numpy array): Array of cumulative variance values from PCA.
+        figsize (tuple): Size of the plot figure.
+        marker (str): Marker style for the plot.
+        linestyle (str): Line style for the plot.
+
+    Returns:
+        None
+    """
+    plt.figure(figsize=figsize)
+    plt.plot(range(1, len(cumulative_variance) + 1), cumulative_variance, 
+             marker=marker, linestyle=linestyle)
+    plt.xlabel('Number of Components')
+    plt.ylabel('Cumulative Explained Variance')
+    plt.title('Explained Variance by PCA Components')
+    plt.grid(True)
+    plt.show()
+
+
