@@ -227,4 +227,137 @@ def plot_cumulative_variance(cumulative_variance, figsize=(8, 5), marker='o', li
     plt.grid(True)
     plt.show()
 
+def plot_cluster_metrics(metrics_data, metrics, title="Average Engagement Metrics per Cluster"):
+    """
+    Function to plot average engagement metrics for each cluster.
+    
+    Args:
+        metrics_data (DataFrame): DataFrame containing the cluster data.
+        metrics (list): List of metrics to visualize.
+        title (str): Title of the plot.
+        
+    Returns:
+        None
+    """
+    # Calculate average metrics for each cluster
+    average_metrics = metrics_data.groupby('Cluster')[metrics].mean()
+    
+    # Plotting
+    plt.figure(figsize=(10, 6))
+    average_metrics.plot(kind='bar', ax=plt.gca())
+    plt.title(title)
+    plt.xlabel('Cluster')
+    plt.ylabel('Average Value')
+    plt.legend(title='Metrics')
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.show()
+def aggregate_application_traffic(data, application_columns, user_id_column="MSISDN/Number"):
+    """
+    Function to aggregate traffic for each application and rank top 10 users.
+    
+    Args:
+        data (DataFrame): The dataset containing traffic data.
+        application_columns (dict): Dictionary mapping application names to their respective DL and UL column names.
+        user_id_column (str): Column representing the user ID.
+    
+    Returns:
+        dict: A dictionary containing top 10 users for each application.
+    """
+    top_users_per_application = {}
 
+    for app, (dl_col, ul_col) in application_columns.items():
+        # Calculate total traffic for the application
+        data[f'{app}_Total_Traffic'] = data[dl_col] + data[ul_col]
+        
+        # Aggregate traffic per user
+        app_traffic = data.groupby(user_id_column)[f'{app}_Total_Traffic'].sum().reset_index()
+        
+        # Get the top 10 users
+        top_users = app_traffic.nlargest(10, f'{app}_Total_Traffic')
+        top_users_per_application[app] = top_users
+    
+    return top_users_per_application
+
+def get_top_users_by_traffic(data, traffic_column, top_n=10):
+    """
+    Extracts the top N users by traffic for a given application.
+    
+    Parameters:
+    - data (DataFrame): The dataset containing user and traffic data.
+    - traffic_column (str): The column representing traffic for the application.
+    - top_n (int): Number of top users to extract (default is 10).
+    
+    Returns:
+    - DataFrame: A DataFrame with the top N users by traffic.
+    """
+    return data.nlargest(top_n, traffic_column)
+#def plot_top_users(data, app_name, traffic_column):
+    """
+    Visualize the top 10 users for a given application with attractive bar charts.
+    
+    Parameters:
+    - data (DataFrame): Data containing the top 10 users and traffic for an application.
+    - app_name (str): Name of the application (e.g., 'YouTube', 'Netflix').
+    - traffic_column (str): Name of the column representing traffic for the application.
+    """
+    # Set style and figure size
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(10, 6))
+    
+    # Sort data to ensure bar chart is ordered
+    data = data.sort_values(traffic_column, ascending=False)
+    
+    # Create bar plot
+    sns.barplot(
+        x=traffic_column,
+        y='MSISDN/Number',
+        data=data,
+        palette='viridis',
+        edgecolor='black'
+    )
+    
+    # Add labels and title
+    plt.title(f"Top 10 Users by Traffic for {app_name}", fontsize=16, fontweight='bold')
+    plt.xlabel("Total Traffic (Bytes)", fontsize=12)
+    plt.ylabel("User (MSISDN/Number)", fontsize=12)
+    plt.xticks(fontsize=10)
+    plt.yticks(fontsize=10)
+    
+    # Annotate bars with traffic values
+    for index, value in enumerate(data[traffic_column]):
+        plt.text(value, index, f'{value:,.0f}', va='center', fontsize=9, color='black')
+    
+    # Show the plot
+    plt.tight_layout()
+    plt.show()
+
+def plot_top_users(data, app_name, column_name):
+    """
+    Plots the top 10 users for a given application based on the specified column.
+
+    Parameters:
+    data (DataFrame): DataFrame containing the top 10 users.
+    app_name (str): Name of the application.
+    column_name (str): Column name for the data usage metric.
+    """
+    plt.figure(figsize=(12, 8))
+    sns.barplot(
+        x=data[column_name],
+        y=data['MSISDN/Number'].astype(str),
+        palette='Blues_d',
+        hue=None  # This should resolve the FutureWarning
+    )
+    
+    # Add formatted labels to each bar
+    for i, v in enumerate(data[column_name]):
+        plt.text(v, i, f'{v:,.0f}', va='center', ha='left', color='black', fontsize=10)
+    
+    plt.xlabel(f'{column_name} (Bytes)', fontsize=12)
+    plt.ylabel('MSISDN/Number', fontsize=12)
+    plt.title(f'Top 10 Users by {app_name} {column_name}', fontsize=14)
+    plt.xticks(rotation=45, ha='right')
+    
+    # Adjust layout to avoid overlaps, and handle tight layout issue
+    plt.tight_layout(pad=3.0)
+    plt.show()
