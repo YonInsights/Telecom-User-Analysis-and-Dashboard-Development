@@ -292,46 +292,6 @@ def get_top_users_by_traffic(data, traffic_column, top_n=10):
     - DataFrame: A DataFrame with the top N users by traffic.
     """
     return data.nlargest(top_n, traffic_column)
-#def plot_top_users(data, app_name, traffic_column):
-    """
-    Visualize the top 10 users for a given application with attractive bar charts.
-    
-    Parameters:
-    - data (DataFrame): Data containing the top 10 users and traffic for an application.
-    - app_name (str): Name of the application (e.g., 'YouTube', 'Netflix').
-    - traffic_column (str): Name of the column representing traffic for the application.
-    """
-    # Set style and figure size
-    sns.set_theme(style="whitegrid")
-    plt.figure(figsize=(10, 6))
-    
-    # Sort data to ensure bar chart is ordered
-    data = data.sort_values(traffic_column, ascending=False)
-    
-    # Create bar plot
-    sns.barplot(
-        x=traffic_column,
-        y='MSISDN/Number',
-        data=data,
-        palette='viridis',
-        edgecolor='black'
-    )
-    
-    # Add labels and title
-    plt.title(f"Top 10 Users by Traffic for {app_name}", fontsize=16, fontweight='bold')
-    plt.xlabel("Total Traffic (Bytes)", fontsize=12)
-    plt.ylabel("User (MSISDN/Number)", fontsize=12)
-    plt.xticks(fontsize=10)
-    plt.yticks(fontsize=10)
-    
-    # Annotate bars with traffic values
-    for index, value in enumerate(data[traffic_column]):
-        plt.text(value, index, f'{value:,.0f}', va='center', fontsize=9, color='black')
-    
-    # Show the plot
-    plt.tight_layout()
-    plt.show()
-
 def plot_top_users(data, app_name, column_name):
     """
     Plots the top 10 users for a given application based on the specified column.
@@ -361,3 +321,76 @@ def plot_top_users(data, app_name, column_name):
     # Adjust layout to avoid overlaps, and handle tight layout issue
     plt.tight_layout(pad=3.0)
     plt.show()
+
+def plot_top_3_apps(top_3_apps):
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(8, 6))
+
+    # Unpack app names and their traffic
+    app_names, traffic_values = zip(*top_3_apps)
+
+    # Plot bar chart
+    sns.barplot(x=app_names, y=traffic_values, palette="Blues_d")
+    plt.title("Top 3 Most-Used Applications by Traffic", fontsize=14, fontweight="bold")
+    plt.xlabel("Applications", fontsize=12)
+    plt.ylabel("Traffic (Bytes)", fontsize=12)
+    plt.xticks(fontsize=10)
+    plt.yticks(fontsize=10)
+
+    # Display the plot
+    plt.show()
+
+# visualisation.py
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+
+def calculate_inertia(scaled_data, k_range):
+    """
+    Calculate the inertia for different values of k.
+    
+    Parameters:
+        scaled_data (ndarray): Scaled data for clustering.
+        k_range (range): Range of k values to iterate over.
+    
+    Returns:
+        list: Inertia values for each k.
+    """
+    inertia = []
+    for k in k_range:
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        kmeans.fit(scaled_data)
+        inertia.append(kmeans.inertia_)
+    return inertia
+
+def plot_elbow_curve(k_values, inertia_values):
+    """
+    Plot the elbow curve to visualize the optimal number of clusters.
+    
+    Parameters:
+        k_values (list): List of k values.
+        inertia_values (list): Corresponding inertia values.
+    """
+    plt.figure(figsize=(8, 6))
+    plt.plot(k_values, inertia_values, marker='o', linestyle='--', color='b')
+    plt.title("Elbow Method for Optimal k", fontsize=14, fontweight="bold")
+    plt.xlabel("Number of Clusters (k)", fontsize=12)
+    plt.ylabel("Inertia", fontsize=12)
+    plt.xticks(fontsize=10)
+    plt.yticks(fontsize=10)
+    plt.grid()
+    plt.show()
+
+def perform_kmeans_clustering(scaled_data, optimal_k):
+    """
+    Perform k-means clustering and assign cluster labels to the data.
+    
+    Parameters:
+        scaled_data (ndarray): Scaled data for clustering.
+        optimal_k (int): Optimal number of clusters.
+    
+    Returns:
+        ndarray: Cluster labels for each data point.
+    """
+    kmeans = KMeans(n_clusters=optimal_k, random_state=42)
+    return kmeans.fit_predict(scaled_data)
+
