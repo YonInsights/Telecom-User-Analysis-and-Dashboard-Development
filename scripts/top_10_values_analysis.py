@@ -94,6 +94,43 @@ def improved_summary_v2(df, column_name):
     
     return summary
 
+def improved_summary_v3(df, column_name):
+    """
+    Displays the top 10, bottom 10, and most frequent value for a given column,
+    formatted cleanly for easier interpretation.
+    
+    Parameters:
+    df (pd.DataFrame): The DataFrame containing the data.
+    column_name (str): The name of the column to analyze.
+    
+    Returns:
+    pd.DataFrame: A DataFrame summarizing the top 10, bottom 10, and most frequent values in a cleaner format.
+    """
+    # Get the Top 10 and Bottom 10 values
+    top_10 = df[column_name].nlargest(10).reset_index(drop=True)
+    bottom_10 = df[column_name].nsmallest(10).reset_index(drop=True)
+    
+    # Get the Most Frequent Value(s)
+    most_frequent = df[column_name].mode().reset_index(drop=True)
+    
+    # Construct summary dataframe for the values
+    summary_values = pd.DataFrame({
+        'Top 10 Values': top_10,
+        'Bottom 10 Values': bottom_10
+    })
+    
+    # Append the Most Frequent Value as a separate row
+    most_frequent_value = most_frequent[0] if not most_frequent.empty else None
+    most_frequent_row = pd.DataFrame({'Top 10 Values': 'Most Frequent Value(s)',
+                                      'Bottom 10 Values': most_frequent_value},
+                                     index=[0])
+    
+    # Combine the summary dataframe with the Most Frequent row
+    final_summary = pd.concat([summary_values, most_frequent_row], ignore_index=True)
+    
+    return final_summary
+
+
 
 
 
