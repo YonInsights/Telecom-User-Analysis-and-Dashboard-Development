@@ -27,7 +27,7 @@ def bottom_10_values(df, column_name):
     """
     return df[column_name].nsmallest(10)
 # Function to compute the most frequent values (mode) for a given column
-def c(df, column_name):
+def most_frequent_values(df, column_name):
     """
     Returns the most frequent values (mode) from the specified column of the DataFrame.
     
