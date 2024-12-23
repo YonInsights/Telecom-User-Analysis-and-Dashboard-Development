@@ -412,3 +412,36 @@ def plot_qoe_distribution(dataframe):
     plt.ylabel('Count')
     plt.xticks(rotation=0)
     plt.show()
+def plot_throughput_distribution(df):
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(x='Handset type', y='Avg Bearer TP DL (kbps)', data=df)
+    plt.title('Distribution of Average Throughput per Handset Type')
+    plt.xlabel('Handset Type')
+    plt.ylabel('Average Throughput (kbps)')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_tcp_retransmission(df):
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(x='Handset type', y='Avg TCP Retransmission', data=df)
+    plt.title('Average TCP Retransmission per Handset Type')
+    plt.xlabel('Handset Type')
+    plt.ylabel('Average TCP Retransmission')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_rtt_distribution(df):
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(x='Handset type', y='Avg RTT (ms)', data=df)
+    plt.title('Distribution of RTT per Handset Type')
+    plt.xlabel('Handset Type')
+    plt.ylabel('RTT (ms)')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
+
