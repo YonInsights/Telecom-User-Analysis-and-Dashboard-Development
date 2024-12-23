@@ -394,3 +394,21 @@ def perform_kmeans_clustering(scaled_data, optimal_k):
     kmeans = KMeans(n_clusters=optimal_k, random_state=42)
     return kmeans.fit_predict(scaled_data)
 
+
+def plot_qoe_distribution(dataframe):
+    """
+    Plots the QoE category distribution.
+
+    Args:
+    dataframe (pd.DataFrame): DataFrame containing QoE category data.
+    """
+    plt.figure(figsize=(8, 6))
+    qoe_distribution = dataframe['QoE Category'].value_counts()
+    qoe_distribution.plot(kind='bar', color=['green', 'yellow', 'orange', 'red'])
+
+    # Customizing plot
+    plt.title('QoE Category Distribution')
+    plt.xlabel('QoE Category')
+    plt.ylabel('Count')
+    plt.xticks(rotation=0)
+    plt.show()
